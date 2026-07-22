@@ -3,7 +3,7 @@ import { Ionicons } from '@expo/vector-icons';
 import { Image, StyleSheet, View } from 'react-native';
 import { Card, Chip, Text } from 'react-native-paper';
 import { Colors } from '../../constants/colors';
-import type { Event } from '../../mocks/events';
+import type { Event } from '../../types/database';
 
 function formatBadgeDate(iso: string): { day: string; month: string } {
   const d = new Date(iso);

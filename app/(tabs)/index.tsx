@@ -1,5 +1,6 @@
+import { useEffect, useState } from "react";
 import { Ionicons } from "@expo/vector-icons";
-import { FlatList, StyleSheet, View } from "react-native";
+import { ActivityIndicator, FlatList, StyleSheet, View } from "react-native";
 import { Surface, Text } from "react-native-paper";
 import { SafeAreaView } from "react-native-safe-area-context";
 import CategoryShortcuts from "../../components/home/CategoryShortcuts";
@@ -8,7 +9,8 @@ import FeaturedBanner from "../../components/home/FeaturedBanner";
 import Header from "../../components/home/Header";
 import SearchBar from "../../components/home/SearchBar";
 import { Colors } from "../../constants/colors";
-import { MOCK_EVENTS } from "../../mocks/events";
+import { fetchEvents } from "../../lib/api";
+import type { Event } from "../../types/database";
 
 function SectionHeader() {
   return (
@@ -27,18 +29,37 @@ function SectionHeader() {
 }
 
 export default function HomeTab() {
+  const [events, setEvents] = useState<Event[]>([]);
+  const [loading, setLoading] = useState(true);
+
+  useEffect(() => {
+    fetchEvents().then((data) => {
+      setEvents(data);
+      setLoading(false);
+    });
+  }, []);
+
+  if (loading) {
+    return (
+      <SafeAreaView style={styles.safe} edges={["top"]}>
+        <View style={styles.loadingContainer}>
+          <ActivityIndicator size="large" color={Colors.primary} />
+        </View>
+      </SafeAreaView>
+    );
+  }
+
   return (
     <SafeAreaView style={styles.safe} edges={["top"]}>
       <FlatList
-        data={MOCK_EVENTS}
+        data={events}
         keyExtractor={(item) => item.id}
         renderItem={({ item }) => <EventCard event={item} />}
         ListHeaderComponent={
           <View>
             <Header />
             <SearchBar />
-            <FeaturedBanner />
-            {/* <LocationPromptCard /> */}
+            <FeaturedBanner events={events} />
             <CategoryShortcuts />
             <SectionHeader />
           </View>
@@ -54,6 +75,11 @@ const styles = StyleSheet.create({
   safe: {
     flex: 1,
     backgroundColor: Colors.background,
+  },
+  loadingContainer: {
+    flex: 1,
+    justifyContent: "center",
+    alignItems: "center",
   },
   listContent: {
     paddingBottom: 24,

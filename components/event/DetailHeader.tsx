@@ -1,7 +1,7 @@
 import { useNavigation } from "@react-navigation/native";
 import { Image, Share, StyleSheet, View } from "react-native";
 import { IconButton } from "react-native-paper";
-import type { Event } from "../../mocks/events";
+import type { Event } from "../../types/database";
 
 interface Props {
   event: Event;

@@ -1,26 +1,44 @@
-import { useState } from 'react';
-import { ScrollView, StyleSheet, View } from 'react-native';
-import { Text } from 'react-native-paper';
-import { useLocalSearchParams } from 'expo-router';
-import DetailHeader from '../../components/event/DetailHeader';
-import EventDescription from '../../components/event/EventDescription';
-import DetailsGrid from '../../components/event/DetailsGrid';
-import RegisterFooter from '../../components/event/RegisterFooter';
-import { Colors } from '../../constants/colors';
-import { MOCK_EVENTS } from '../../mocks/events';
+import { useEffect, useState } from "react";
+import { ScrollView, StyleSheet, View } from "react-native";
+import { ActivityIndicator, Text } from "react-native-paper";
+import { useLocalSearchParams } from "expo-router";
+import DetailHeader from "../../components/event/DetailHeader";
+import EventDescription from "../../components/event/EventDescription";
+import DetailsGrid from "../../components/event/DetailsGrid";
+import RegisterFooter from "../../components/event/RegisterFooter";
+import { Colors } from "../../constants/colors";
+import { fetchEventById } from "../../lib/api";
+import type { Event } from "../../types/database";
 
 function formatBadgeDate(iso: string): { day: string; month: string } {
   const d = new Date(iso);
   return {
-    day: d.toLocaleDateString('en-US', { day: 'numeric' }),
-    month: d.toLocaleDateString('en-US', { month: 'short' }),
+    day: d.toLocaleDateString("en-US", { day: "numeric" }),
+    month: d.toLocaleDateString("en-US", { month: "short" }),
   };
 }
 
 export default function EventDetailScreen() {
   const { id } = useLocalSearchParams<{ id: string }>();
-  const event = MOCK_EVENTS.find((e) => e.id === id);
+  const [event, setEvent] = useState<Event | null>(null);
+  const [loading, setLoading] = useState(true);
   const [saved, setSaved] = useState(false);
+
+  useEffect(() => {
+    if (!id) return;
+    fetchEventById(id).then((data) => {
+      setEvent(data);
+      setLoading(false);
+    });
+  }, [id]);
+
+  if (loading) {
+    return (
+      <View style={styles.centered}>
+        <ActivityIndicator size="large" color={Colors.primary} />
+      </View>
+    );
+  }
 
   if (!event) {
     return (
@@ -91,39 +109,39 @@ const styles = StyleSheet.create({
     paddingTop: 20,
   },
   titleRow: {
-    flexDirection: 'row',
-    justifyContent: 'space-between',
-    alignItems: 'flex-start',
+    flexDirection: "row",
+    justifyContent: "space-between",
+    alignItems: "flex-start",
     paddingHorizontal: 20,
     gap: 12,
   },
   title: {
     flex: 1,
-    fontWeight: '700',
+    fontWeight: "700",
     color: Colors.text,
   },
   dateBadge: {
-    backgroundColor: '#F0F0F0',
+    backgroundColor: "#F0F0F0",
     borderRadius: 10,
     paddingVertical: 6,
     paddingHorizontal: 10,
-    alignItems: 'center',
+    alignItems: "center",
     minWidth: 48,
   },
   dateDay: {
-    fontWeight: '700',
+    fontWeight: "700",
     color: Colors.text,
     lineHeight: 20,
   },
   dateMonth: {
-    fontWeight: '500',
+    fontWeight: "500",
     color: Colors.text,
-    textTransform: 'uppercase',
+    textTransform: "uppercase",
     lineHeight: 14,
   },
   locationRow: {
-    flexDirection: 'row',
-    alignItems: 'center',
+    flexDirection: "row",
+    alignItems: "center",
     gap: 4,
     paddingHorizontal: 20,
     marginTop: 6,
@@ -134,7 +152,7 @@ const styles = StyleSheet.create({
   },
   centered: {
     flex: 1,
-    justifyContent: 'center',
-    alignItems: 'center',
+    justifyContent: "center",
+    alignItems: "center",
   },
 });

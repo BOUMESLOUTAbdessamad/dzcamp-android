@@ -2,7 +2,7 @@ import { useState } from "react";
 import { Alert, StyleSheet, View } from "react-native";
 import { Button, Text } from "react-native-paper";
 import { Colors } from "../../constants/colors";
-import type { Event } from "../../mocks/events";
+import type { Event } from "../../types/database";
 
 export default function RegisterFooter({ event }: { event: Event }) {
   const [registered, setRegistered] = useState(false);

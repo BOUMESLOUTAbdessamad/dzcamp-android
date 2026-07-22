@@ -2,7 +2,7 @@ import { Ionicons } from '@expo/vector-icons';
 import { Image, StyleSheet, View } from 'react-native';
 import { Card, Text } from 'react-native-paper';
 import { Colors } from '../../constants/colors';
-import { MOCK_EVENTS } from '../../mocks/events';
+import type { Event } from '../../types/database';
 
 function formatDate(iso: string): string {
   const d = new Date(iso);
@@ -13,9 +13,11 @@ function formatDate(iso: string): string {
   });
 }
 
-const featured = MOCK_EVENTS[0];
+export default function FeaturedBanner({ events }: { events: Event[] }) {
+  const featured = events[0];
 
-export default function FeaturedBanner() {
+  if (!featured) return null;
+
   return (
     <Card style={styles.card} mode="contained">
       <Image source={{ uri: featured.imageUrl }} style={styles.image} />

@@ -2,7 +2,7 @@ import { Ionicons } from '@expo/vector-icons';
 import { StyleSheet, View } from 'react-native';
 import { Surface, Text } from 'react-native-paper';
 import { Colors } from '../../constants/colors';
-import type { Event } from '../../mocks/events';
+import type { Event } from '../../types/database';
 
 interface DetailItem {
   icon: keyof typeof Ionicons.glyphMap;
