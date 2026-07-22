@@ -41,7 +41,7 @@ app-example
 # generated native folders
 /ios
 /android
-/mocks
+# /mocks
 
 # Envirement variables
 .env
