@@ -1,5 +1,6 @@
 import { Ionicons } from '@expo/vector-icons';
-import { Image, StyleSheet, Text, View } from 'react-native';
+import { Image, StyleSheet, View } from 'react-native';
+import { Card, Chip, Text } from 'react-native-paper';
 import { Colors } from '../../constants/colors';
 import type { Event } from '../../mocks/events';
 
@@ -19,32 +20,49 @@ export default function EventCard({ event }: { event: Event }) {
   const { day, month } = formatBadgeDate(event.startsAt);
 
   return (
-    <View style={styles.card}>
+    <Card style={styles.card} mode="contained">
       <View style={styles.imageContainer}>
         <Image source={{ uri: event.imageUrl }} style={styles.image} />
         <View style={styles.dateBadge}>
-          <Text style={styles.dateDay}>{day}</Text>
-          <Text style={styles.dateMonth}>{month}</Text>
+          <Text variant="titleMedium" style={styles.dateDay}>
+            {day}
+          </Text>
+          <Text variant="labelSmall" style={styles.dateMonth}>
+            {month}
+          </Text>
         </View>
-        <View style={styles.categoryBadge}>
-          <Text style={styles.categoryText}>{categoryLabel(event.category)}</Text>
-        </View>
+        <Chip
+          compact
+          style={styles.categoryBadge}
+          textStyle={styles.categoryText}
+        >
+          {categoryLabel(event.category)}
+        </Chip>
       </View>
 
-      <View style={styles.info}>
-        <Text style={styles.title} numberOfLines={1}>{event.title}</Text>
+      <Card.Content style={styles.info}>
+        <Text variant="titleMedium" style={styles.title} numberOfLines={1}>
+          {event.title}
+        </Text>
         <View style={styles.locationRow}>
-          <Ionicons name="location-outline" size={14} color={Colors.text} style={{ opacity: 0.5 }} />
-          <Text style={styles.location} numberOfLines={1}>{event.location}</Text>
+          <Ionicons
+            name="location-outline"
+            size={14}
+            color={Colors.text}
+            style={{ opacity: 0.5 }}
+          />
+          <Text variant="bodySmall" style={styles.location} numberOfLines={1}>
+            {event.location}
+          </Text>
         </View>
-        <Text style={[
-          styles.spots,
-          event.spotsLeft <= 5 && styles.spotsLow,
-        ]}>
+        <Text
+          variant="bodySmall"
+          style={[styles.spots, event.spotsLeft <= 5 && styles.spotsLow]}
+        >
           {event.spotsLeft} spots left
         </Text>
-      </View>
-    </View>
+      </Card.Content>
+    </Card>
   );
 }
 
@@ -52,9 +70,10 @@ const styles = StyleSheet.create({
   card: {
     marginHorizontal: 20,
     marginBottom: 16,
-    backgroundColor: Colors.background,
     borderRadius: 16,
     overflow: 'hidden',
+    backgroundColor: Colors.background,
+    elevation: 0,
     borderWidth: 1,
     borderColor: '#F0F0F0',
   },
@@ -77,13 +96,11 @@ const styles = StyleSheet.create({
     minWidth: 40,
   },
   dateDay: {
-    fontSize: 16,
     fontWeight: '700',
     color: Colors.text,
     lineHeight: 18,
   },
   dateMonth: {
-    fontSize: 10,
     fontWeight: '500',
     color: Colors.text,
     textTransform: 'uppercase',
@@ -94,9 +111,7 @@ const styles = StyleSheet.create({
     top: 12,
     right: 12,
     backgroundColor: Colors.primary,
-    borderRadius: 10,
-    paddingVertical: 4,
-    paddingHorizontal: 10,
+    height: 28,
   },
   categoryText: {
     color: '#FFFFFF',
@@ -107,7 +122,6 @@ const styles = StyleSheet.create({
     padding: 14,
   },
   title: {
-    fontSize: 17,
     fontWeight: '700',
     color: Colors.text,
     marginBottom: 4,
@@ -119,12 +133,10 @@ const styles = StyleSheet.create({
     marginBottom: 6,
   },
   location: {
-    fontSize: 13,
     color: Colors.text,
     opacity: 0.6,
   },
   spots: {
-    fontSize: 13,
     fontWeight: '600',
     color: Colors.primary,
   },

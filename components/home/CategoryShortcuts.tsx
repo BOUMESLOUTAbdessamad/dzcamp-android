@@ -1,5 +1,6 @@
 import { Ionicons } from '@expo/vector-icons';
-import { StyleSheet, Text, View } from 'react-native';
+import { StyleSheet, View } from 'react-native';
+import { Surface, Text } from 'react-native-paper';
 import { Colors } from '../../constants/colors';
 
 interface CategoryItem {
@@ -9,9 +10,9 @@ interface CategoryItem {
 
 const CATEGORIES: CategoryItem[] = [
   { label: 'Hiking', icon: 'walk-outline' },
-  { label: 'Camping', icon: 'bonfire-outline' },
+  { label: 'Camping', icon: 'compass-outline' },
   { label: 'Family', icon: 'people-outline' },
-  { label: 'Multi-Day', icon: 'calendar-outline' },
+  { label: 'Only-Girls', icon: 'female-outline' },
 ];
 
 export default function CategoryShortcuts() {
@@ -19,10 +20,12 @@ export default function CategoryShortcuts() {
     <View style={styles.container}>
       {CATEGORIES.map((cat) => (
         <View key={cat.label} style={styles.item}>
-          <View style={styles.circle}>
+          <Surface style={styles.circle} elevation={0}>
             <Ionicons name={cat.icon} size={22} color={Colors.primary} />
-          </View>
-          <Text style={styles.label}>{cat.label}</Text>
+          </Surface>
+          <Text variant="labelSmall" style={styles.label}>
+            {cat.label}
+          </Text>
         </View>
       ))}
     </View>
@@ -50,7 +53,6 @@ const styles = StyleSheet.create({
     marginBottom: 8,
   },
   label: {
-    fontSize: 12,
     fontWeight: '500',
     color: Colors.text,
     textAlign: 'center',

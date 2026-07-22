@@ -1,23 +1,27 @@
 import { Ionicons } from '@expo/vector-icons';
-import { FlatList, StyleSheet, Text, View } from 'react-native';
+import { FlatList, StyleSheet, View } from 'react-native';
+import { Surface, Text } from 'react-native-paper';
 import { SafeAreaView } from 'react-native-safe-area-context';
-import { Colors } from '../../constants/colors';
-import { MOCK_EVENTS, type Event } from '../../mocks/events';
-import Header from '../../components/home/Header';
-import SearchBar from '../../components/home/SearchBar';
-import FeaturedBanner from '../../components/home/FeaturedBanner';
-import LocationPromptCard from '../../components/home/LocationPromptCard';
 import CategoryShortcuts from '../../components/home/CategoryShortcuts';
 import EventCard from '../../components/home/EventCard';
+import FeaturedBanner from '../../components/home/FeaturedBanner';
+import Header from '../../components/home/Header';
+import SearchBar from '../../components/home/SearchBar';
+import { Colors } from '../../constants/colors';
+import { MOCK_EVENTS } from '../../mocks/events';
 
 function SectionHeader() {
   return (
     <View style={styles.sectionHeader}>
-      <Text style={styles.sectionTitle}>Upcoming Events</Text>
-      <View style={styles.mapPill}>
+      <Text variant="titleLarge" style={styles.sectionTitle}>
+        Upcoming Events
+      </Text>
+      <Surface style={styles.mapPill} elevation={0}>
         <Ionicons name="map-outline" size={16} color={Colors.primary} />
-        <Text style={styles.mapPillText}>Map</Text>
-      </View>
+        <Text variant="labelMedium" style={styles.mapPillText}>
+          Map
+        </Text>
+      </Surface>
     </View>
   );
 }
@@ -34,7 +38,6 @@ export default function HomeTab() {
             <Header />
             <SearchBar />
             <FeaturedBanner />
-            <LocationPromptCard />
             <CategoryShortcuts />
             <SectionHeader />
           </View>
@@ -63,7 +66,6 @@ const styles = StyleSheet.create({
     marginBottom: 12,
   },
   sectionTitle: {
-    fontSize: 20,
     fontWeight: '700',
     color: Colors.text,
   },
@@ -77,7 +79,6 @@ const styles = StyleSheet.create({
     gap: 4,
   },
   mapPillText: {
-    fontSize: 13,
     fontWeight: '600',
     color: Colors.primary,
   },

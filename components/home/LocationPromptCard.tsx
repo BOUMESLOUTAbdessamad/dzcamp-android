@@ -1,18 +1,27 @@
 import { Ionicons } from '@expo/vector-icons';
-import { StyleSheet, Text, TouchableOpacity, View } from 'react-native';
+import { StyleSheet, View } from 'react-native';
+import { Button, Surface, Text } from 'react-native-paper';
 import { Colors } from '../../constants/colors';
 
 export default function LocationPromptCard() {
   return (
-    <View style={styles.container}>
+    <Surface style={styles.container} elevation={0}>
       <View style={styles.iconCircle}>
         <Ionicons name="location-outline" size={22} color={Colors.primary} />
       </View>
-      <Text style={styles.text}>Discover hikes & campsites{'\n'}near you</Text>
-      <TouchableOpacity style={styles.button} activeOpacity={0.8}>
-        <Text style={styles.buttonText}>Enable Location</Text>
-      </TouchableOpacity>
-    </View>
+      <Text variant="bodyMedium" style={styles.text}>
+        Discover hikes & campsites{'\n'}near you
+      </Text>
+      <Button
+        mode="contained"
+        buttonColor={Colors.primary}
+        textColor="#FFFFFF"
+        style={styles.button}
+        labelStyle={styles.buttonLabel}
+      >
+        Enable Location
+      </Button>
+    </Surface>
   );
 }
 
@@ -35,7 +44,6 @@ const styles = StyleSheet.create({
     marginBottom: 12,
   },
   text: {
-    fontSize: 15,
     fontWeight: '600',
     color: Colors.text,
     textAlign: 'center',
@@ -43,13 +51,10 @@ const styles = StyleSheet.create({
     marginBottom: 16,
   },
   button: {
-    backgroundColor: Colors.primary,
-    paddingHorizontal: 28,
-    paddingVertical: 12,
     borderRadius: 24,
+    paddingHorizontal: 28,
   },
-  buttonText: {
-    color: '#FFFFFF',
+  buttonLabel: {
     fontSize: 14,
     fontWeight: '600',
   },

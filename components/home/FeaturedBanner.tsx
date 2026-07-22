@@ -1,39 +1,51 @@
 import { Ionicons } from '@expo/vector-icons';
-import { Image, StyleSheet, Text, View } from 'react-native';
+import { Image, StyleSheet, View } from 'react-native';
+import { Card, Text } from 'react-native-paper';
 import { Colors } from '../../constants/colors';
 import { MOCK_EVENTS } from '../../mocks/events';
 
 function formatDate(iso: string): string {
   const d = new Date(iso);
-  return d.toLocaleDateString('en-US', { month: 'short', day: 'numeric', year: 'numeric' });
+  return d.toLocaleDateString('en-US', {
+    month: 'short',
+    day: 'numeric',
+    year: 'numeric',
+  });
 }
 
 const featured = MOCK_EVENTS[0];
 
 export default function FeaturedBanner() {
   return (
-    <View style={styles.container}>
+    <Card style={styles.card} mode="contained">
       <Image source={{ uri: featured.imageUrl }} style={styles.image} />
       <View style={styles.scrim} />
-      <View style={styles.overlay}>
+      <Card.Content style={styles.overlay}>
         <View style={styles.badge}>
           <Ionicons name="flame-outline" size={14} color="#FFF" />
-          <Text style={styles.badgeText}>Featured</Text>
+          <Text variant="labelSmall" style={styles.badgeText}>
+            Featured
+          </Text>
         </View>
-        <Text style={styles.title}>{featured.title}</Text>
-        <Text style={styles.date}>{formatDate(featured.startsAt)}</Text>
-      </View>
-    </View>
+        <Text variant="titleLarge" style={styles.title}>
+          {featured.title}
+        </Text>
+        <Text variant="bodySmall" style={styles.date}>
+          {formatDate(featured.startsAt)}
+        </Text>
+      </Card.Content>
+    </Card>
   );
 }
 
 const styles = StyleSheet.create({
-  container: {
+  card: {
     marginHorizontal: 20,
     marginTop: 12,
     borderRadius: 16,
     overflow: 'hidden',
     height: 200,
+    backgroundColor: 'transparent',
   },
   image: {
     width: '100%',
@@ -63,17 +75,14 @@ const styles = StyleSheet.create({
   },
   badgeText: {
     color: '#FFF',
-    fontSize: 12,
     fontWeight: '600',
   },
   title: {
     color: '#FFFFFF',
-    fontSize: 20,
     fontWeight: '700',
   },
   date: {
     color: '#FFFFFF',
-    fontSize: 13,
     opacity: 0.85,
     marginTop: 2,
   },
