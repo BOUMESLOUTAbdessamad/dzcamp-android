@@ -1,3 +1,4 @@
+import { useRouter } from 'expo-router';
 import { Ionicons } from '@expo/vector-icons';
 import { Image, StyleSheet, View } from 'react-native';
 import { Card, Chip, Text } from 'react-native-paper';
@@ -17,10 +18,15 @@ function categoryLabel(c: Event['category']): string {
 }
 
 export default function EventCard({ event }: { event: Event }) {
+  const router = useRouter();
   const { day, month } = formatBadgeDate(event.startsAt);
 
   return (
-    <Card style={styles.card} mode="contained">
+    <Card
+      style={styles.card}
+      mode="contained"
+      onPress={() => router.push(`/event/${event.id}`)}
+    >
       <View style={styles.imageContainer}>
         <Image source={{ uri: event.imageUrl }} style={styles.image} />
         <View style={styles.dateBadge}>
