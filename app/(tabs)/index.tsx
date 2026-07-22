@@ -1,14 +1,14 @@
-import { Ionicons } from '@expo/vector-icons';
-import { FlatList, StyleSheet, View } from 'react-native';
-import { Surface, Text } from 'react-native-paper';
-import { SafeAreaView } from 'react-native-safe-area-context';
-import CategoryShortcuts from '../../components/home/CategoryShortcuts';
-import EventCard from '../../components/home/EventCard';
-import FeaturedBanner from '../../components/home/FeaturedBanner';
-import Header from '../../components/home/Header';
-import SearchBar from '../../components/home/SearchBar';
-import { Colors } from '../../constants/colors';
-import { MOCK_EVENTS } from '../../mocks/events';
+import { Ionicons } from "@expo/vector-icons";
+import { FlatList, StyleSheet, View } from "react-native";
+import { Surface, Text } from "react-native-paper";
+import { SafeAreaView } from "react-native-safe-area-context";
+import CategoryShortcuts from "../../components/home/CategoryShortcuts";
+import EventCard from "../../components/home/EventCard";
+import FeaturedBanner from "../../components/home/FeaturedBanner";
+import Header from "../../components/home/Header";
+import SearchBar from "../../components/home/SearchBar";
+import { Colors } from "../../constants/colors";
+import { MOCK_EVENTS } from "../../mocks/events";
 
 function SectionHeader() {
   return (
@@ -28,7 +28,7 @@ function SectionHeader() {
 
 export default function HomeTab() {
   return (
-    <SafeAreaView style={styles.safe} edges={['top']}>
+    <SafeAreaView style={styles.safe} edges={["top"]}>
       <FlatList
         data={MOCK_EVENTS}
         keyExtractor={(item) => item.id}
@@ -38,6 +38,7 @@ export default function HomeTab() {
             <Header />
             <SearchBar />
             <FeaturedBanner />
+            {/* <LocationPromptCard /> */}
             <CategoryShortcuts />
             <SectionHeader />
           </View>
@@ -58,28 +59,28 @@ const styles = StyleSheet.create({
     paddingBottom: 24,
   },
   sectionHeader: {
-    flexDirection: 'row',
-    justifyContent: 'space-between',
-    alignItems: 'center',
+    flexDirection: "row",
+    justifyContent: "space-between",
+    alignItems: "center",
     paddingHorizontal: 20,
     marginTop: 24,
     marginBottom: 12,
   },
   sectionTitle: {
-    fontWeight: '700',
+    fontWeight: "700",
     color: Colors.text,
   },
   mapPill: {
-    flexDirection: 'row',
-    alignItems: 'center',
-    backgroundColor: '#E8F5E9',
+    flexDirection: "row",
+    alignItems: "center",
+    backgroundColor: "#E8F5E9",
     paddingHorizontal: 14,
     paddingVertical: 6,
     borderRadius: 16,
     gap: 4,
   },
   mapPillText: {
-    fontWeight: '600',
+    fontWeight: "600",
     color: Colors.primary,
   },
 });
