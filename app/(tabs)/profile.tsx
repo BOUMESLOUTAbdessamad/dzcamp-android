@@ -1,10 +1,42 @@
 import { StyleSheet, Text, View } from "react-native";
 import { UserButton } from "@clerk/expo/native";
-import { useUser } from "@clerk/expo";
+import { useAuth, useUser } from "@clerk/expo";
+import { useRouter } from "expo-router";
+import { Button, Text as PaperText } from "react-native-paper";
 import { Colors } from "../../constants/colors";
 
 export default function ProfileTab() {
+  const { isSignedIn } = useAuth();
   const { user } = useUser();
+  const router = useRouter();
+
+  if (!isSignedIn) {
+    return (
+      <View style={styles.container}>
+        <View style={styles.loggedOutContainer}>
+          <View style={styles.avatarPlaceholder}>
+            <PaperText style={styles.avatarPlaceholderText}>?</PaperText>
+          </View>
+          <PaperText variant="titleMedium" style={styles.loggedOutTitle}>
+            Sign in to view your profile
+          </PaperText>
+          <PaperText variant="bodyMedium" style={styles.loggedOutSubtitle}>
+            Access your events, settings, and account details.
+          </PaperText>
+          <Button
+            mode="contained"
+            buttonColor={Colors.primary}
+            textColor="#FFFFFF"
+            style={styles.signInButton}
+            labelStyle={styles.signInButtonLabel}
+            onPress={() => router.push("/(auth)")}
+          >
+            Sign In
+          </Button>
+        </View>
+      </View>
+    );
+  }
 
   const email = user?.primaryEmailAddress?.emailAddress ?? "No email";
   const name = user?.fullName ?? "New User";
@@ -99,5 +131,50 @@ const styles = StyleSheet.create({
     color: Colors.text,
     maxWidth: "60%",
     textAlign: "right",
+  },
+  loggedOutContainer: {
+    flex: 1,
+    alignItems: "center",
+    justifyContent: "center",
+    paddingBottom: 80,
+  },
+  avatarPlaceholder: {
+    width: 80,
+    height: 80,
+    borderRadius: 40,
+    backgroundColor: "#F0F0F0",
+    alignItems: "center",
+    justifyContent: "center",
+    marginBottom: 16,
+  },
+  avatarPlaceholderText: {
+    fontSize: 32,
+    fontWeight: "700",
+    color: Colors.text,
+    opacity: 0.3,
+  },
+  loggedOutTitle: {
+    fontSize: 18,
+    fontWeight: "700",
+    color: Colors.text,
+    marginBottom: 6,
+    textAlign: "center",
+  },
+  loggedOutSubtitle: {
+    fontSize: 14,
+    color: Colors.text,
+    opacity: 0.6,
+    marginBottom: 24,
+    textAlign: "center",
+    paddingHorizontal: 20,
+  },
+  signInButton: {
+    borderRadius: 28,
+    paddingVertical: 4,
+    paddingHorizontal: 32,
+  },
+  signInButtonLabel: {
+    fontSize: 16,
+    fontWeight: "600",
   },
 });
