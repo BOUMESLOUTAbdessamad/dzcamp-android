@@ -24,7 +24,7 @@ export default function SignInScreen() {
 
   useEffect(() => {
     if (isSignedIn && userId && pendingEmailRef.current) {
-      const supabase = createSupabaseClerkClient(getToken());
+      const supabase = createSupabaseClerkClient(getToken({ template: "supabase" }));
       supabase
         .from("users")
         .upsert(

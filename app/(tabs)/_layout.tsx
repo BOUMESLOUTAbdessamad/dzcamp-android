@@ -12,20 +12,25 @@ export default function TabLayout() {
 
     useEffect(() => {
         if (!isSignedIn || !userId || !user) return;
-        const supabase = createSupabaseClerkClient(getToken());
-        supabase
-            .from("users")
-            .upsert(
-                {
-                    clerk_id: userId,
-                    email: user.primaryEmailAddress?.emailAddress ?? null,
-                },
-                { onConflict: "clerk_id" },
-            )
-            .then(({ error: dbErr }) => {
-                if (dbErr)
-                    console.error("Supabase upsert failed:", dbErr.message);
-            });
+        let cancelled = false;
+        getToken({ template: "supabase" }).then((token) => {
+            if (cancelled || !token) return;
+            const supabase = createSupabaseClerkClient(Promise.resolve(token));
+            supabase
+                .from("users")
+                .upsert(
+                    {
+                        clerk_id: userId,
+                        email: user.primaryEmailAddress?.emailAddress ?? null,
+                    },
+                    { onConflict: "clerk_id" },
+                )
+                .then(({ error: dbErr }) => {
+                    if (dbErr)
+                        console.error("Supabase upsert failed:", dbErr.message);
+                });
+        });
+        return () => { cancelled = true; };
     }, [isSignedIn, userId, user, getToken]);
 
     if (!isLoaded) return null;
@@ -39,10 +44,7 @@ export default function TabLayout() {
             <Tabs.Screen name="gallery" />
             <Tabs.Screen name="search" />
             <Tabs.Screen name="profile" />
-            <Tabs.Screen
-                name="settings"
-                options={{ href: isSignedIn ? undefined : null }}
-            />
+            <Tabs.Screen name="settings" />
         </Tabs>
     );
 }

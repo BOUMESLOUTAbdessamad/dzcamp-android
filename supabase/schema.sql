@@ -49,6 +49,33 @@ CREATE POLICY "Anyone can read events"
   ON events FOR SELECT
   USING (true);
 
+-- 4. SAVED EVENTS
+-- ============================================================
+
+CREATE TABLE saved_events (
+  user_id   TEXT NOT NULL,
+  event_id  UUID NOT NULL REFERENCES events(id) ON DELETE CASCADE,
+  created_at TIMESTAMPTZ DEFAULT timezone('utc'::text, now()) NOT NULL,
+  PRIMARY KEY (user_id, event_id)
+);
+
+CREATE INDEX idx_saved_events_user_id ON saved_events(user_id);
+CREATE INDEX idx_saved_events_event_id ON saved_events(event_id);
+
+ALTER TABLE saved_events ENABLE ROW LEVEL SECURITY;
+
+CREATE POLICY "Users can view their own saved events"
+  ON saved_events FOR SELECT
+  USING (auth.jwt() ->> 'sub' = user_id);
+
+CREATE POLICY "Users can save events"
+  ON saved_events FOR INSERT
+  WITH CHECK (auth.jwt() ->> 'sub' = user_id);
+
+CREATE POLICY "Users can remove their saved events"
+  ON saved_events FOR DELETE
+  USING (auth.jwt() ->> 'sub' = user_id);
+
 -- 4. SEED DATA
 -- ============================================================
 
