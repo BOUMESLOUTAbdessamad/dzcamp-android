@@ -8,7 +8,7 @@ import EventDescription from "../../components/event/EventDescription";
 import DetailsGrid from "../../components/event/DetailsGrid";
 import RegisterFooter from "../../components/event/RegisterFooter";
 import { Colors } from "../../constants/colors";
-import { fetchEventById, isEventSaved, toggleSaveEvent } from "../../lib/api";
+import { fetchEventById, isEventSaved, saveEvent, unsaveEvent } from "../../lib/api";
 import { createSupabaseClerkClient } from "../../utils/supabase";
 import type { Event } from "../../types/database";
 
@@ -54,10 +54,14 @@ export default function EventDetailScreen() {
     if (!isSignedIn || !userId || !id) return;
     const token = await getToken({ template: "supabase" });
     if (!token) return;
-    setSaved((prev) => !prev);
     const client = createSupabaseClerkClient(Promise.resolve(token));
-    const newState = await toggleSaveEvent(client, userId, id, saved);
-    setSaved(newState);
+    if (saved) {
+      setSaved(false);
+      await unsaveEvent(client, id);
+    } else {
+      setSaved(true);
+      await saveEvent(client, userId, id);
+    }
   }, [isSignedIn, userId, id, getToken, saved]);
 
   if (loading) {

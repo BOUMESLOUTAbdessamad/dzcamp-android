@@ -16,6 +16,7 @@ CREATE TABLE events (
   id            UUID PRIMARY KEY DEFAULT gen_random_uuid(),
   title         TEXT        NOT NULL,
   category      event_category NOT NULL,
+  city          TEXT        NOT NULL DEFAULT '',
   location      TEXT        NOT NULL,
   starts_at     TIMESTAMPTZ NOT NULL,
   max_attendees INTEGER     NOT NULL CHECK (max_attendees > 0),
@@ -80,7 +81,7 @@ CREATE POLICY "Users can remove their saved events"
 -- ============================================================
 
 INSERT INTO events (
-  id, title, category, location, starts_at,
+  id, title, category, city, location, starts_at,
   max_attendees, spots_left, image_url, description,
   difficulty, duration_label, distance_km, elevation_gain_m,
   meals_provided, facilities
@@ -89,6 +90,7 @@ INSERT INTO events (
   '11111111-1111-1111-1111-111111111111',
   'Cedar Ridge Sunrise Hike',
   'camping',
+  'Cedar Falls',
   'Cedar Ridge Trail, NC',
   '2026-08-05T06:30:00+00:00',
   20, 7,
@@ -101,6 +103,7 @@ INSERT INTO events (
   '22222222-2222-2222-2222-222222222222',
   'Blue Lake Campout',
   'camping',
+  'Riverside',
   'Blue Lake Campground, CO',
   '2026-08-12T14:00:00+00:00',
   30, 12,
@@ -113,6 +116,7 @@ INSERT INTO events (
   '33333333-3333-3333-3333-333333333333',
   'Eagle Peak Trail',
   'hiking',
+  'Lakeview',
   'Eagle Peak, WA',
   '2026-08-18T07:00:00+00:00',
   15, 3,
@@ -125,6 +129,7 @@ INSERT INTO events (
   '44444444-4444-4444-4444-444444444444',
   'Whispering Pines Weekend',
   'camping',
+  'Cedar Falls',
   'Whispering Pines, MT',
   '2026-08-25T12:00:00+00:00',
   25, 18,

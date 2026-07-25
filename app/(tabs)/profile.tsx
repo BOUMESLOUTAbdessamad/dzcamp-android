@@ -2,11 +2,11 @@ import { useAuth, useUser } from "@clerk/expo";
 import { UserButton } from "@clerk/expo/native";
 import { useRouter } from "expo-router";
 import { useCallback, useEffect, useState } from "react";
-import { FlatList, StyleSheet, View } from "react-native";
+import { Alert, FlatList, StyleSheet, View } from "react-native";
 import { Button, Text as PaperText } from "react-native-paper";
-import EventCard from "../../components/home/EventCard";
+import EventCard from "../../components/EventCard";
 import { Colors } from "../../constants/colors";
-import { fetchSavedEvents } from "../../lib/api";
+import { fetchSavedEvents, unsaveEvent } from "../../lib/api";
 import type { Event } from "../../types/database";
 import { createSupabaseClerkClient } from "../../utils/supabase";
 
@@ -26,6 +26,30 @@ export default function ProfileTab() {
         const events = await fetchSavedEvents(client);
         setSavedEvents(events);
     }, [isSignedIn, getToken]);
+
+    const handleUnsave = useCallback(
+        async (eventId: string) => {
+            Alert.alert("Remove Event", "Remove this event from your saved list?", [
+                { text: "Cancel", style: "cancel" },
+                {
+                    text: "Remove",
+                    style: "destructive",
+                    onPress: async () => {
+                        const token = await getToken({ template: "supabase" });
+                        if (!token) return;
+                        const client = createSupabaseClerkClient(
+                            Promise.resolve(token),
+                        );
+                        await unsaveEvent(client, eventId);
+                        setSavedEvents((prev) =>
+                            prev.filter((e) => e.id !== eventId),
+                        );
+                    },
+                },
+            ]);
+        },
+        [getToken],
+    );
 
     useEffect(() => {
         loadSavedEvents();
@@ -109,7 +133,12 @@ export default function ProfileTab() {
             }
             data={savedEvents}
             keyExtractor={(item) => item.id}
-            renderItem={({ item }) => <EventCard event={item} />}
+            renderItem={({ item }) => (
+                <EventCard
+                    event={item}
+                    onUnsave={() => handleUnsave(item.id)}
+                />
+            )}
             ListEmptyComponent={
                 <View style={styles.emptySaved}>
                     <PaperText style={styles.emptyText}>

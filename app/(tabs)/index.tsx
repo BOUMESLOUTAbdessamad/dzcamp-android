@@ -4,7 +4,7 @@ import { ActivityIndicator, FlatList, StyleSheet, View } from "react-native";
 import { Surface, Text } from "react-native-paper";
 import { SafeAreaView } from "react-native-safe-area-context";
 import CategoryShortcuts from "../../components/home/CategoryShortcuts";
-import EventCard from "../../components/home/EventCard";
+import EventCard from "../../components/EventCard";
 import FeaturedBanner from "../../components/home/FeaturedBanner";
 import Header from "../../components/home/Header";
 import SearchBar from "../../components/home/SearchBar";

@@ -52,33 +52,35 @@ export async function isEventSaved(
   return data !== null;
 }
 
-/** Save or unsave an event. Returns the new saved state. */
-export async function toggleSaveEvent(
+/** Save an event. Returns true on success. */
+export async function saveEvent(
   client: SupabaseClient,
   userId: string,
   eventId: string,
-  currentlySaved: boolean,
 ): Promise<boolean> {
-  if (currentlySaved) {
-    const { error } = await client
-      .from("saved_events")
-      .delete()
-      .eq("user_id", userId)
-      .eq("event_id", eventId);
-
-    if (error) {
-      console.error("Failed to unsave event:", error.message);
-      return true;
-    }
-    return false;
-  }
-
   const { error } = await client
     .from("saved_events")
     .insert({ user_id: userId, event_id: eventId });
 
   if (error) {
     console.error("Failed to save event:", error.message);
+    return false;
+  }
+  return true;
+}
+
+/** Unsave an event by event_id. RLS scopes to the current user. */
+export async function unsaveEvent(
+  client: SupabaseClient,
+  eventId: string,
+): Promise<boolean> {
+  const { error } = await client
+    .from("saved_events")
+    .delete()
+    .eq("event_id", eventId);
+
+  if (error) {
+    console.error("Failed to unsave event:", error.message);
     return false;
   }
   return true;
