@@ -1,13 +1,15 @@
-import { useEffect, useState } from "react";
+import { useCallback, useEffect, useState } from "react";
 import { ScrollView, StyleSheet, View } from "react-native";
 import { ActivityIndicator, Text } from "react-native-paper";
+import { useAuth } from "@clerk/expo";
 import { useLocalSearchParams } from "expo-router";
 import DetailHeader from "../../components/event/DetailHeader";
 import EventDescription from "../../components/event/EventDescription";
 import DetailsGrid from "../../components/event/DetailsGrid";
 import RegisterFooter from "../../components/event/RegisterFooter";
 import { Colors } from "../../constants/colors";
-import { fetchEventById } from "../../lib/api";
+import { fetchEventById, isEventSaved, saveEvent, unsaveEvent } from "../../lib/api";
+import { createSupabaseClerkClient } from "../../utils/supabase";
 import type { Event } from "../../types/database";
 
 function formatBadgeDate(iso: string): { day: string; month: string } {
@@ -23,6 +25,9 @@ export default function EventDetailScreen() {
   const [event, setEvent] = useState<Event | null>(null);
   const [loading, setLoading] = useState(true);
   const [saved, setSaved] = useState(false);
+  const { isSignedIn, getToken, userId } = useAuth({
+    treatPendingAsSignedOut: false,
+  });
 
   useEffect(() => {
     if (!id) return;
@@ -31,6 +36,33 @@ export default function EventDetailScreen() {
       setLoading(false);
     });
   }, [id]);
+
+  useEffect(() => {
+    if (!isSignedIn || !userId || !id) return;
+    let cancelled = false;
+    getToken({ template: "supabase" }).then((token) => {
+      if (cancelled || !token) return;
+      const client = createSupabaseClerkClient(Promise.resolve(token));
+      isEventSaved(client, userId, id).then((s) => {
+        if (!cancelled) setSaved(s);
+      });
+    });
+    return () => { cancelled = true; };
+  }, [isSignedIn, userId, id, getToken]);
+
+  const handleToggleSave = useCallback(async () => {
+    if (!isSignedIn || !userId || !id) return;
+    const token = await getToken({ template: "supabase" });
+    if (!token) return;
+    const client = createSupabaseClerkClient(Promise.resolve(token));
+    if (saved) {
+      setSaved(false);
+      await unsaveEvent(client, id);
+    } else {
+      setSaved(true);
+      await saveEvent(client, userId, id);
+    }
+  }, [isSignedIn, userId, id, getToken, saved]);
 
   if (loading) {
     return (
@@ -60,7 +92,7 @@ export default function EventDetailScreen() {
         <DetailHeader
           event={event}
           saved={saved}
-          onToggleSave={() => setSaved((p) => !p)}
+          onToggleSave={handleToggleSave}
         />
 
         <View style={styles.body}>

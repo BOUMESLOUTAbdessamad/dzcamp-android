@@ -6,6 +6,7 @@ export interface EventRow {
   id: string;
   title: string;
   category: EventCategory;
+  city: string | null;
   location: string;
   starts_at: string;
   max_attendees: number;
@@ -26,6 +27,7 @@ export interface Event {
   id: string;
   title: string;
   category: EventCategory;
+  city: string;
   location: string;
   startsAt: string;
   maxAttendees: number;
@@ -46,6 +48,7 @@ export function rowToEvent(row: EventRow): Event {
     id: row.id,
     title: row.title,
     category: row.category,
+    city: row.city ?? "",
     location: row.location,
     startsAt: row.starts_at,
     maxAttendees: row.max_attendees,

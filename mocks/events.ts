@@ -6,6 +6,7 @@ export interface Event {
   id: string;
   title: string;
   category: EventCategory;
+  city: string;
   location: string;
   startsAt: string;
   maxAttendees: number;
@@ -25,13 +26,18 @@ export const currentUser = {
   name: "Sarah",
 };
 
+function daysFromNow(n: number): string {
+  return new Date(Date.now() + n * 86_400_000).toISOString();
+}
+
 export const MOCK_EVENTS: Event[] = [
   {
-    id: "1",
+    id: "a1b2c3d4-e5f6-4a7b-8c9d-0e1f2a3b4c5d",
     title: "Cedar Ridge Sunrise Hike",
     category: "camping",
+    city: "Cedar Falls",
     location: "Cedar Ridge Trail, NC",
-    startsAt: "2026-08-05T06:30:00Z",
+    startsAt: daysFromNow(2),
     maxAttendees: 20,
     spotsLeft: 7,
     imageUrl:
@@ -49,8 +55,9 @@ export const MOCK_EVENTS: Event[] = [
     id: "2",
     title: "Blue Lake Campout",
     category: "camping",
+    city: "Riverside",
     location: "Blue Lake Campground, CO",
-    startsAt: "2026-08-12T14:00:00Z",
+    startsAt: daysFromNow(5),
     maxAttendees: 30,
     spotsLeft: 12,
     imageUrl:
@@ -68,8 +75,9 @@ export const MOCK_EVENTS: Event[] = [
     id: "3",
     title: "Eagle Peak Trail",
     category: "hiking",
+    city: "Lakeview",
     location: "Eagle Peak, WA",
-    startsAt: "2026-08-18T07:00:00Z",
+    startsAt: daysFromNow(12),
     maxAttendees: 15,
     spotsLeft: 3,
     imageUrl:
@@ -87,8 +95,9 @@ export const MOCK_EVENTS: Event[] = [
     id: "4",
     title: "Whispering Pines Weekend",
     category: "camping",
+    city: "Cedar Falls",
     location: "Whispering Pines, MT",
-    startsAt: "2026-08-25T12:00:00Z",
+    startsAt: daysFromNow(25),
     maxAttendees: 25,
     spotsLeft: 18,
     imageUrl: "https://picsum.photos/seed/camp-2/400/300",

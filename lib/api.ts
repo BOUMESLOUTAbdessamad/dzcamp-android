@@ -1,3 +1,4 @@
+import type { SupabaseClient } from "@supabase/supabase-js";
 import { rowToEvent, type Event } from "../types/database";
 import { supabase } from "./supabase";
 
@@ -29,4 +30,78 @@ export async function fetchEventById(id: string): Promise<Event | null> {
     return null;
   }
   return rowToEvent(data);
+}
+
+/** Check whether the user has saved a specific event. */
+export async function isEventSaved(
+  client: SupabaseClient,
+  userId: string,
+  eventId: string,
+): Promise<boolean> {
+  const { data, error } = await client
+    .from("saved_events")
+    .select("event_id")
+    .eq("user_id", userId)
+    .eq("event_id", eventId)
+    .maybeSingle();
+
+  if (error) {
+    console.error("Failed to check saved status:", error.message);
+    return false;
+  }
+  return data !== null;
+}
+
+/** Save an event. Returns true on success. */
+export async function saveEvent(
+  client: SupabaseClient,
+  userId: string,
+  eventId: string,
+): Promise<boolean> {
+  const { error } = await client
+    .from("saved_events")
+    .insert({ user_id: userId, event_id: eventId });
+
+  if (error) {
+    console.error("Failed to save event:", error.message);
+    return false;
+  }
+  return true;
+}
+
+/** Unsave an event by event_id. RLS scopes to the current user. */
+export async function unsaveEvent(
+  client: SupabaseClient,
+  eventId: string,
+): Promise<boolean> {
+  const { error } = await client
+    .from("saved_events")
+    .delete()
+    .eq("event_id", eventId);
+
+  if (error) {
+    console.error("Failed to unsave event:", error.message);
+    return false;
+  }
+  return true;
+}
+
+/** Fetch all saved events for a user, with full event data joined. */
+export async function fetchSavedEvents(
+  client: SupabaseClient,
+): Promise<Event[]> {
+  const { data, error } = await client
+    .from("saved_events")
+    .select("event_id, events(*)")
+    .order("saved_at", { ascending: false });
+
+  if (error) {
+    console.error("Failed to fetch saved events:", error.message);
+    return [];
+  }
+
+  return data
+    .map((row: { events: any }) => row.events)
+    .filter(Boolean)
+    .map(rowToEvent);
 }

@@ -1,11 +1,15 @@
 import { useState } from "react";
 import { Alert, StyleSheet, View } from "react-native";
 import { Button, Text } from "react-native-paper";
+import { useAuth } from "@clerk/expo";
+import { useRouter } from "expo-router";
 import { Colors } from "../../constants/colors";
 import type { Event } from "../../types/database";
 
 export default function RegisterFooter({ event }: { event: Event }) {
   const [registered, setRegistered] = useState(false);
+  const { isSignedIn } = useAuth();
+  const router = useRouter();
 
   if (event.spotsLeft === 0 && !registered) {
     return (
@@ -43,6 +47,10 @@ export default function RegisterFooter({ event }: { event: Event }) {
         style={styles.button}
         labelStyle={styles.buttonLabel}
         onPress={() => {
+          if (!isSignedIn) {
+            router.push("/(auth)");
+            return;
+          }
           Alert.alert("Confirm Registration", `Register for ${event.title}?`, [
             { text: "Cancel", style: "cancel" },
             { text: "Register", onPress: () => setRegistered(true) },

@@ -1,9 +1,9 @@
 import { useRouter } from 'expo-router';
 import { Ionicons } from '@expo/vector-icons';
-import { Image, StyleSheet, View } from 'react-native';
+import { Image, Pressable, StyleSheet, View } from 'react-native';
 import { Card, Chip, Text } from 'react-native-paper';
-import { Colors } from '../../constants/colors';
-import type { Event } from '../../types/database';
+import { Colors } from '../constants/colors';
+import type { Event } from '../types/database';
 
 function formatBadgeDate(iso: string): { day: string; month: string } {
   const d = new Date(iso);
@@ -17,7 +17,12 @@ function categoryLabel(c: Event['category']): string {
   return c === 'hiking' ? 'Hiking' : 'Camping';
 }
 
-export default function EventCard({ event }: { event: Event }) {
+interface Props {
+  event: Event;
+  onUnsave?: () => void;
+}
+
+export default function EventCard({ event, onUnsave }: Props) {
   const router = useRouter();
   const { day, month } = formatBadgeDate(event.startsAt);
 
@@ -44,6 +49,11 @@ export default function EventCard({ event }: { event: Event }) {
         >
           {categoryLabel(event.category)}
         </Chip>
+        {onUnsave && (
+          <Pressable style={styles.unsaveButton} onPress={onUnsave}>
+            <Ionicons name="bookmark" size={18} color={Colors.primary} />
+          </Pressable>
+        )}
       </View>
 
       <Card.Content style={styles.info}>
@@ -123,6 +133,22 @@ const styles = StyleSheet.create({
     color: '#FFFFFF',
     fontSize: 11,
     fontWeight: '600',
+  },
+  unsaveButton: {
+    position: 'absolute',
+    bottom: 10,
+    right: 10,
+    backgroundColor: '#FFFFFF',
+    borderRadius: 16,
+    width: 32,
+    height: 32,
+    alignItems: 'center',
+    justifyContent: 'center',
+    shadowColor: '#000',
+    shadowOffset: { width: 0, height: 1 },
+    shadowOpacity: 0.15,
+    shadowRadius: 3,
+    elevation: 3,
   },
   info: {
     padding: 14,

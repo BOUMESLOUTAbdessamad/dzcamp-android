@@ -5,33 +5,35 @@ import CustomTabBar from "../../components/CustomTabBar";
 import { createSupabaseClerkClient } from "../../utils/supabase";
 
 export default function TabLayout() {
-  const { isLoaded, isSignedIn, getToken, userId } = useAuth({
-    treatPendingAsSignedOut: false,
-  });
-  const { user } = useUser();
+    const { isLoaded, isSignedIn, getToken, userId } = useAuth({
+        treatPendingAsSignedOut: false,
+    });
+    const { user } = useUser();
 
-  useEffect(() => {
-    if (!isSignedIn || !userId || !user) return;
-    const supabase = createSupabaseClerkClient(getToken());
-    supabase
-      .from("users")
-      .upsert(
-        {
-          clerk_id: userId,
-          email: user.primaryEmailAddress?.emailAddress ?? null,
-        },
-        { onConflict: "clerk_id" },
-      )
-      .then(({ error: dbErr }) => {
-        if (dbErr) console.error("Supabase upsert failed:", dbErr.message);
-      });
-  }, [isSignedIn, userId, user, getToken]);
+    useEffect(() => {
+        if (!isSignedIn || !userId || !user) return;
+        let cancelled = false;
+        getToken({ template: "supabase" }).then((token) => {
+            if (cancelled || !token) return;
+            const supabase = createSupabaseClerkClient(Promise.resolve(token));
+            supabase
+                .from("users")
+                .upsert(
+                    {
+                        clerk_id: userId,
+                        email: user.primaryEmailAddress?.emailAddress ?? null,
+                    },
+                    { onConflict: "clerk_id" },
+                )
+                .then(({ error: dbErr }) => {
+                    if (dbErr)
+                        console.error("Supabase upsert failed:", dbErr.message);
+                });
+        });
+        return () => { cancelled = true; };
+    }, [isSignedIn, userId, user, getToken]);
 
-  if (!isLoaded) return null;
-
-  if (!isSignedIn) {
-    return <Redirect href="/(auth)" />;
-  }
+    if (!isLoaded) return null;
 
   return (
     <Tabs

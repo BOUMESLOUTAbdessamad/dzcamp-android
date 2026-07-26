@@ -1,6 +1,9 @@
 import { UserProfileView } from "@clerk/expo/native";
 import { StyleSheet, View } from "react-native";
 import { Colors } from "../../constants/colors";
+import { fetchSavedEvents, unsaveEvent } from "../../lib/api";
+import type { Event } from "../../types/database";
+import { createSupabaseClerkClient } from "../../utils/supabase";
 
 export default function ProfileTab() {
   return (
