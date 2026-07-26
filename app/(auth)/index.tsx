@@ -1,5 +1,7 @@
 import { AuthView } from "@clerk/expo/native";
-import { SafeAreaView, StyleSheet } from "react-native";
+import { StyleSheet } from "react-native";
+import { SafeAreaView } from "react-native-safe-area-context";
+
 import { Colors } from "../../constants/colors";
 
 export default function AuthScreen() {
