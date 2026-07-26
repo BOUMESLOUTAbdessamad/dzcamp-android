@@ -18,7 +18,7 @@ export default function Header() {
           Find your next adventure
         </Text>
       </View>
-      <TouchableOpacity onPress={() => navigation.push("profile")}>
+      <TouchableOpacity onPress={() => navigation.push("/profile")}>
         <Avatar.Icon
           size={44}
           icon="account"
