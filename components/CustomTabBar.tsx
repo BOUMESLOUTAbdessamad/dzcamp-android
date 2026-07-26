@@ -9,10 +9,9 @@ type IconName = keyof typeof Ionicons.glyphMap;
 
 const TAB_CONFIG: Record<string, { label: string; icon: IconName }> = {
   index: { label: "Home", icon: "home" },
-  gallery: { label: "Gallery", icon: "images" },
   search: { label: "Search", icon: "search" },
+  saved: { label: "Saved", icon: "bookmark" },
   profile: { label: "Profile", icon: "person" },
-  settings: { label: "Settings", icon: "settings" },
 };
 
 function TabItem({

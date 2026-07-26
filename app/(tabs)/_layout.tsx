@@ -1,6 +1,6 @@
-import { useEffect } from "react";
-import { Redirect, Tabs } from "expo-router";
 import { useAuth, useUser } from "@clerk/expo";
+import { Redirect, Tabs } from "expo-router";
+import { useEffect } from "react";
 import CustomTabBar from "../../components/CustomTabBar";
 import { createSupabaseClerkClient } from "../../utils/supabase";
 
@@ -39,10 +39,9 @@ export default function TabLayout() {
       screenOptions={{ headerShown: false }}
     >
       <Tabs.Screen name="index" />
-      <Tabs.Screen name="gallery" />
       <Tabs.Screen name="search" />
+      <Tabs.Screen name="saved" />
       <Tabs.Screen name="profile" />
-      <Tabs.Screen name="settings" />
     </Tabs>
   );
 }
