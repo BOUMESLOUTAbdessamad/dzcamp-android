@@ -1,10 +1,11 @@
-import { StyleSheet, Text, View } from 'react-native';
-import { Colors } from '../../constants/colors';
+import { UserProfileView } from "@clerk/expo/native";
+import { StyleSheet, View } from "react-native";
+import { Colors } from "../../constants/colors";
 
 export default function ProfileTab() {
   return (
     <View style={styles.container}>
-      <Text style={styles.label}>Profile</Text>
+      <UserProfileView isDismissible={false} style={styles.profile} />
     </View>
   );
 }
@@ -12,13 +13,9 @@ export default function ProfileTab() {
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    justifyContent: 'center',
-    alignItems: 'center',
     backgroundColor: Colors.background,
   },
-  label: {
-    fontSize: 24,
-    fontWeight: '600',
-    color: Colors.text,
+  profile: {
+    flex: 1,
   },
 });

@@ -40,8 +40,8 @@
           }
         }
       ],
-      "@clerk/expo",
-      "expo-secure-store"
+      "expo-secure-store",
+      ["@clerk/expo", { "appleSignIn": false }]
     ],
     "experiments": {
       "typedRoutes": true,

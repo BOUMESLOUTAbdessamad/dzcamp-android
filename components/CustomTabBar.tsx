@@ -1,7 +1,7 @@
 import Ionicons from "@expo/vector-icons/Ionicons";
 import type { BottomTabBarProps } from "@react-navigation/bottom-tabs";
 import type { Route } from "@react-navigation/native";
-import { Pressable, StyleSheet, View, Text } from "react-native";
+import { Pressable, StyleSheet, Text, View } from "react-native";
 import { useSafeAreaInsets } from "react-native-safe-area-context";
 import { Colors } from "../constants/colors";
 
@@ -9,10 +9,9 @@ type IconName = keyof typeof Ionicons.glyphMap;
 
 const TAB_CONFIG: Record<string, { label: string; icon: IconName }> = {
   index: { label: "Home", icon: "home" },
-  gallery: { label: "Gallery", icon: "images" },
   search: { label: "Search", icon: "search" },
+  saved: { label: "Saved", icon: "bookmark" },
   profile: { label: "Profile", icon: "person" },
-  settings: { label: "Settings", icon: "settings" },
 };
 
 function TabItem({
@@ -26,7 +25,10 @@ function TabItem({
   onPress: () => void;
   onLongPress: () => void;
 }) {
-  const config = TAB_CONFIG[route.name] ?? { label: route.name, icon: "help-circle" };
+  const config = TAB_CONFIG[route.name] ?? {
+    label: route.name,
+    icon: "help-circle",
+  };
   const iconName = config.icon;
 
   return (
@@ -60,10 +62,7 @@ function TabItem({
   );
 }
 
-export default function CustomTabBar({
-  state,
-  navigation,
-}: BottomTabBarProps) {
+export default function CustomTabBar({ state, navigation }: BottomTabBarProps) {
   const insets = useSafeAreaInsets();
 
   return (
