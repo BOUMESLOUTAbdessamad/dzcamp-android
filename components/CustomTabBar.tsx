@@ -9,11 +9,10 @@ import { Colors } from "../constants/colors";
 type IconName = keyof typeof Ionicons.glyphMap;
 
 const TAB_CONFIG: Record<string, { label: string; icon: IconName }> = {
-    index: { label: "Home", icon: "home" },
-    gallery: { label: "Gallery", icon: "images" },
-    search: { label: "Search", icon: "search" },
-    profile: { label: "Profile", icon: "person" },
-    settings: { label: "Settings", icon: "settings" },
+  index: { label: "Home", icon: "home" },
+  search: { label: "Search", icon: "search" },
+  saved: { label: "Saved", icon: "bookmark" },
+  profile: { label: "Profile", icon: "person" },
 };
 
 function TabItem({
